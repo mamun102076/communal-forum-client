@@ -2,14 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const menuItem = <>
-    <li><Link>Media</Link></li>
-    <li><Link>Message</Link></li>
-    <li><Link>About</Link></li>
+    <li><Link to="/">Home</Link></li>
+    <li><Link to="/media">Media</Link></li>
+    <li><Link to="/message">Message</Link></li>
+    <li><Link to="/about">About</Link></li>
 </>
 
 const NavBar = () => {
     return (
-        <div className="navbar bg-base-100">
+        <div className="navbar text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
             <div className="navbar-start">
                 <div className="dropdown">
                     <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -19,7 +20,7 @@ const NavBar = () => {
                         {menuItem}
                     </ul>
                 </div>
-                <Link className="btn btn-ghost normal-case text-xl">daisyUI</Link>
+                <Link className="btn btn-ghost normal-case text-xl">Communal Forum</Link>
             </div>
             <div className="navbar-center hidden lg:flex ml-auto">
                 <ul className="menu menu-horizontal px-1">
