@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const PostCard = ({data}) => {
-    const { _id, text, image } = data
+const PopularPostCard = ({popular}) => {
+    const { _id, text, image } = popular
     return (
         <div className="card shadow-xl bg-amber-200 p-5 mb-10">
             <div className="card-body">
@@ -14,4 +14,4 @@ const PostCard = ({data}) => {
     );
 };
 
-export default PostCard;
+export default PopularPostCard;

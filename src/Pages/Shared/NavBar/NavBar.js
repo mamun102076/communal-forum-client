@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../Context/AuthProvider';
 
-const menuItem = <>
-    <li><Link to="/">Home</Link></li>
-    <li><Link to="/media">Media</Link></li>
-    <li><Link to="/message">Message</Link></li>
-    <li><Link to="/about">About</Link></li>
-</>
 
 const NavBar = () => {
+    const { user, logOut } = useContext(AuthContext)
+    const handleLogout = () => {
+        logOut()
+        .then(() => {})
+        .catch(error => console.log(error))
+    }
+    const menuItem = <>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/media">Media</Link></li>
+        <li><Link to={`/about/${user?.email}`}>About</Link></li>
+        <>
+            {
+                user?.email ?
+                    <>
+                        <li><button onClick={handleLogout}>Logout</button></li>
+                    </>
+                    :
+                    <>
+                        <li><Link to="/login">Login</Link></li>
+                        <li><Link to="/register">Register</Link></li>
+                    </>
+            }
+        </>
+    </>
     return (
         <div className="navbar text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
             <div className="navbar-start">
@@ -20,7 +39,7 @@ const NavBar = () => {
                         {menuItem}
                     </ul>
                 </div>
-                <Link className="btn btn-ghost normal-case text-xl">Communal Forum</Link>
+                <Link className="btn btn-ghost normal-case text-2xl">Communal Forum</Link>
             </div>
             <div className="navbar-center hidden lg:flex ml-auto">
                 <ul className="menu menu-horizontal px-1">

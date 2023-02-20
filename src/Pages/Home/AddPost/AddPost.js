@@ -1,43 +1,51 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../Context/AuthProvider';
 
 const AddPost = () => {
     const { register, handleSubmit } = useForm()
     const imageKey = process.env.REACT_APP_Imgbb_Key
+    const { user } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const handlePostSubmit = data => {
-        const image = data.image[0]
-        const formData = new FormData()
-        formData.append('image', image)
-        const url = `https://api.imgbb.com/1/upload?key=${imageKey}`
-        fetch(url, {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(imgData => {
-                if (imgData.success) {
-                    const postData = {
-                        text: data.text,
-                        image: imgData.data.url
-                    }
-                    fetch('http://localhost:5000/posts', {
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/json'
-                        },
-                        body: JSON.stringify(postData)
-                    })
-                        .then(res => res.json())
-                        .then(result => {
-                            if (result.acknowledged) {
-                                toast.success('post added successfully')
-                            }
-                            console.log(result)
-                        })
-                }
+        if (user?.email) {
+            const image = data.image[0]
+            const formData = new FormData()
+            formData.append('image', image)
+            const url = `https://api.imgbb.com/1/upload?key=${imageKey}`
+            fetch(url, {
+                method: 'POST',
+                body: formData
             })
+                .then(res => res.json())
+                .then(imgData => {
+                    if (imgData.success) {
+                        const postData = {
+                            text: data.text,
+                            image: imgData.data.url
+                        }
+                        fetch('http://localhost:5000/posts', {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify(postData)
+                        })
+                            .then(res => res.json())
+                            .then(result => {
+                                if (result.acknowledged) {
+                                    toast.success('post added successfully')
+                                    navigate('/media')
+                                }
+                            })
+                    }
+                })
+        } else {
+            navigate('/login')
+        }
     }
     return (
         <div className='mt-5'>

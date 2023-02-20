@@ -1,5 +1,6 @@
 import React from 'react';
 import AddPost from '../AddPost/AddPost';
+import PopularPosts from '../PopularPosts/PopularPosts';
 // import UploadImage from '../UploadImage/UploadImage';
 
 const Home = () => {
@@ -10,6 +11,7 @@ const Home = () => {
                 <div className="divider text-6xl">OR</div>
             </div>
             <UploadImage></UploadImage> */}
+            <PopularPosts></PopularPosts>
         </div>
     );
 };

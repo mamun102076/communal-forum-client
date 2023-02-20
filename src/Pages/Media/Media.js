@@ -12,7 +12,7 @@ const Media = () => {
         }
     })
     return (
-        <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 my-10 mx-10'>
+        <div className='grid w-8/12 mx-auto my-10'>
             {
                 data?.map(data => <PostCard key={data
                 ._id} data={data}></PostCard>)
