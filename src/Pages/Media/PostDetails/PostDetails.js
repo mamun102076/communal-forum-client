@@ -15,7 +15,7 @@ const PostDetails = () => {
     const { data = [], refetch } = useQuery({
         queryKey: ['likedItem'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/posts/${id}`)
+            const res = await fetch(`https://communal-forum-server.vercel.app/posts/${id}`)
             const data = await res.json()
             return data
         }
@@ -28,7 +28,7 @@ const PostDetails = () => {
         count++
         setCount(count)
         const like = { count }
-        fetch(`http://localhost:5000/posts/${id}`, {
+        fetch(`https://communal-forum-server.vercel.app/posts/${id}`, {
             method: 'PUT',
             headers: {
                 'content-type': 'application/json'
@@ -49,7 +49,7 @@ const PostDetails = () => {
             text: data.text,
             commentId: id
         }
-        fetch('http://localhost:5000/comments', {
+        fetch('https://communal-forum-server.vercel.app/comments', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -66,7 +66,7 @@ const PostDetails = () => {
 
     }
 
-    fetch(`http://localhost:5000/comments/${id}`)
+    fetch(`https://communal-forum-server.vercel.app/comments/${id}`)
     .then(res => res.json())
     .then(data => {
         setComments(data)

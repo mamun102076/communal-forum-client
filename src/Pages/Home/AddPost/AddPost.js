@@ -27,7 +27,7 @@ const AddPost = () => {
                             text: data.text,
                             image: imgData.data.url
                         }
-                        fetch('http://localhost:5000/posts', {
+                        fetch('https://communal-forum-server.vercel.app/posts', {
                             method: 'POST',
                             headers: {
                                 'content-type': 'application/json'

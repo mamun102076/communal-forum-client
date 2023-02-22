@@ -6,7 +6,7 @@ const PopularPosts = () => {
     const { data: popular = [] } = useQuery({
         queryKey: ['popular'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/posts/count')
+            const res = await fetch('https://communal-forum-server.vercel.app/posts/count')
             const data = await res.json()
             return data
         }

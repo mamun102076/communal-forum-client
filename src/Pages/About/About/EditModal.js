@@ -17,7 +17,7 @@ const EditModal = ({ data, setData }) => {
         const newEmail = newData.email
         updateUserEmail(newEmail)
             .then(result1 => {
-                fetch(`http://localhost:5000/users/${user?.uid}`, {
+                fetch(`https://communal-forum-server.vercel.app/users/${user?.uid}`, {
                     method: 'PUT',
                     headers: {
                         'content-type': 'application/json'

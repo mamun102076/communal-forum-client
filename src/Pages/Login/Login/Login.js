@@ -33,7 +33,7 @@ const Login = () => {
     }
     const saveGoogleUser = (name,email,uid) => {
         const user = { name,email,uid }
-        fetch('http://localhost:5000/users',{
+        fetch('https://communal-forum-server.vercel.app/users',{
             method: 'POST',
             headers: {
                 'content-type' : 'application/json'

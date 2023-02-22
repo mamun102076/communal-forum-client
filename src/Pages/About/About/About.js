@@ -12,7 +12,7 @@ const About = () => {
     const { data: aboutData = [] } = useQuery({
         queryKey: ['aboutData'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/users/${id}`)
+            const res = await fetch(`https://communal-forum-server.vercel.app/users/${id}`)
             const data = await res.json()
             setData(data)
             return data
