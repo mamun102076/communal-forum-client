@@ -15,7 +15,7 @@ const Media = () => {
         <div className='grid w-8/12 mx-auto my-10'>
             {
                 data?.map(data => <PostCard key={data
-                ._id} data={data}></PostCard>)
+                ._id} data={data}></PostCard>).reverse()
             }
         </div>
     );

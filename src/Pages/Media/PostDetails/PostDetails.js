@@ -10,6 +10,7 @@ import Comments from '../Comments/Comments';
 const PostDetails = () => {
     const { id } = useParams()
     const { user } = useContext(AuthContext)
+    const [comments,setComments] = useState([])
 
     const { data = [], refetch } = useQuery({
         queryKey: ['likedItem'],
@@ -21,7 +22,7 @@ const PostDetails = () => {
     })
 
     let [count, setCount] = useState(0)
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, reset } = useForm()
 
     const handleLikeCount = id => {
         count++
@@ -59,17 +60,17 @@ const PostDetails = () => {
             .then(result => {
                 if (result.insertedId) {
                     toast.success('comment successfully')
+                    reset()
                 }
             })
+
     }
 
-    const { data: comments = [] } = useQuery({
-        queryKey: ['comments'],
-        queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/comments/${id}`)
-            const data = await res.json()
-            return data
-        }
+    fetch(`http://localhost:5000/comments/${id}`)
+    .then(res => res.json())
+    .then(data => {
+        setComments(data)
+        refetch()
     })
 
     return (
@@ -93,7 +94,10 @@ const PostDetails = () => {
                 <h1 className='text-4xl font-semibold text-center text-green-600 mt-10'><b>See Comments</b></h1>
                 <div className='grid gap-10 my-10'>
                     {
+                        comments.length ? 
                         comments.map(comment => <Comments key={comment._id} comment={comment}></Comments>)
+                        :
+                        <h1 className='text-4xl text-pink-600 text-center font-semibold'>No comments yet</h1>
                     }
                 </div>
             </div>

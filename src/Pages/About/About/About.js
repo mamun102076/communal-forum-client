@@ -1,15 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { AuthContext } from '../../../Context/AuthProvider';
 import EditModal from './EditModal';
 
 const About = () => {
-    const { email } = useParams()
-    const { data = [], refetch } = useQuery({
+    
+    const { user } = useContext(AuthContext)
+    const id = user?.uid
+    const [data,setData] = useState([])
+
+    const { data: aboutData = [] } = useQuery({
         queryKey: ['aboutData'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/users/${email}`)
+            const res = await fetch(`http://localhost:5000/users/${id}`)
             const data = await res.json()
+            setData(data)
             return data
         }
     })
@@ -40,7 +45,7 @@ const About = () => {
                 </table>
             </div>
             {
-                data && <EditModal key={data._id} data={data} refetch={refetch}></EditModal>
+                data && <EditModal key={data._id} data={data} setData={setData}></EditModal>
             }
         </div>
     );

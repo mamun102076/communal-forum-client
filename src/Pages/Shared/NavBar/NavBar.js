@@ -13,7 +13,7 @@ const NavBar = () => {
     const menuItem = <>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/media">Media</Link></li>
-        <li><Link to={`/about/${user?.email}`}>About</Link></li>
+        <li><Link to={`/about/${user?.uid}`}>About</Link></li>
         <>
             {
                 user?.email ?

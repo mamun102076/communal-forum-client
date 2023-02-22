@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { AuthContext } from '../../../Context/AuthProvider';
 
-const EditModal = ({ data }) => {
+const EditModal = ({ data, setData }) => {
     const { updateUserEmail } = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
     const { register, handleSubmit } = useForm()
     const handleEditModal = newData => {
-        console.log(data.email)
         const updatedField = {
             name: newData.name,
             email: newData.email,
@@ -17,8 +17,7 @@ const EditModal = ({ data }) => {
         const newEmail = newData.email
         updateUserEmail(newEmail)
             .then(result1 => {
-                console.log(result1)
-                fetch(`http://localhost:5000/users/${data?.email}`, {
+                fetch(`http://localhost:5000/users/${user?.uid}`, {
                     method: 'PUT',
                     headers: {
                         'content-type': 'application/json'
@@ -27,11 +26,11 @@ const EditModal = ({ data }) => {
                 })
                     .then(res => res.json())
                     .then(result => {
-                        console.log(result)
                         toast.success('update successfully')
+                        setData(newData)
                     })
             })
-            .catch(error => console.log(error))
+            .catch(error => console.log(error.message))
     }
 
     return (
