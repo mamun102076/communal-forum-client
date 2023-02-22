@@ -11,22 +11,21 @@ const PostDetails = () => {
     const { id } = useParams()
     const { user } = useContext(AuthContext)
     const [comments,setComments] = useState([])
+    let [count, setCount] = useState(0)
+    const { register, handleSubmit, reset } = useForm()
 
-    const { data = [], refetch } = useQuery({
+    const { data: likedItem = [], refetch } = useQuery({
         queryKey: ['likedItem'],
         queryFn: async () => {
             const res = await fetch(`https://communal-forum-server.vercel.app/posts/${id}`)
             const data = await res.json()
+            setCount(data.likes)
             return data
         }
     })
 
-    let [count, setCount] = useState(0)
-    const { register, handleSubmit, reset } = useForm()
-
     const handleLikeCount = id => {
-        count++
-        setCount(count)
+        setCount(count++)
         const like = { count }
         fetch(`https://communal-forum-server.vercel.app/posts/${id}`, {
             method: 'PUT',
@@ -36,8 +35,9 @@ const PostDetails = () => {
             body: JSON.stringify(like)
         })
             .then(res => res.json())
-            .then(data => {
-                if (data.modifiedCount > 0) {
+            .then(result1 => {
+                console.log(result1)
+                if (result1.modifiedCount > 0) {
                     refetch()
                 }
             })
@@ -75,11 +75,11 @@ const PostDetails = () => {
 
     return (
         <div className='mx-14 my-10'>
-            <h1 className='text-2xl font-semibold mb-8'>{data.text}</h1>
-            <img src={data.image} className="w-full h-96" alt="" />
+            <h1 className='text-2xl font-semibold mb-8'>{likedItem.text}</h1>
+            <img src={likedItem.image} className="w-full h-96" alt="" />
             <div className='flex justify-center my-10'>
                 <button onClick={() => handleLikeCount(id)} className='text-6xl text-blue-500 hover:scale-150 duration-300'>{< AiOutlineLike />}</button>
-                <span className='mt-8 ml-6'>{data.likes ? data.likes : 0} people like this post</span>
+                <span className='mt-8 ml-6'>{count} people like this post</span>
             </div>
             <form onSubmit={handleSubmit(handleComment)} className="form-control">
                 <div className="form-control w-full">
