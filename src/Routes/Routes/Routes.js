@@ -11,6 +11,10 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
     {
+        path: '*',
+        element: <div className="text-red-600 text-center font-bold text-4xl mt-10">Sorry no route found</div>
+    },
+    {
         path: '/',
         element: <Main></Main>,
         children: [
