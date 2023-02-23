@@ -10,7 +10,6 @@ import Comments from '../Comments/Comments';
 const PostDetails = () => {
     const { id } = useParams()
     const { user } = useContext(AuthContext)
-    const [comments, setComments] = useState([])
     const { register, handleSubmit } = useForm()
     let [count, setCount] = useState(0)
 
@@ -61,16 +60,15 @@ const PostDetails = () => {
             .then(res => res.json())
             .then(result => {
                 toast.success('comment successfully')
+                refetch()
             })
     }
 
-    const {data: allComment = [] } = useQuery({
+    const { data: allComment = [] } = useQuery({
         queryKey: ['allComment'],
         queryFn: async () => {
             const res = await fetch(`https://communal-forum-server.vercel.app/comments/${id}`)
             const data = await res.json()
-            setComments(data)
-            refetch()
             return data
         }
     })
@@ -96,8 +94,8 @@ const PostDetails = () => {
                 <h1 className='text-4xl font-semibold text-center text-green-600 mt-10'><b>See Comments</b></h1>
                 <div className='grid gap-10 my-10'>
                     {
-                        comments ?
-                            comments?.map(comment => <Comments key={comment._id} comment={comment}></Comments>)
+                        allComment ?
+                            allComment?.map(comment => <Comments key={comment._id} comment={comment}></Comments>)
                             :
                             <h1 className='text-4xl text-pink-600 text-center font-semibold'>No comments yet</h1>
                     }
