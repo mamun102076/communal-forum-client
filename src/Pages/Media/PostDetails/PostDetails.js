@@ -10,22 +10,23 @@ import Comments from '../Comments/Comments';
 const PostDetails = () => {
     const { id } = useParams()
     const { user } = useContext(AuthContext)
-    const [comments,setComments] = useState([])
+    const [comments, setComments] = useState([])
+    const { register, handleSubmit } = useForm()
     let [count, setCount] = useState(0)
-    const { register, handleSubmit, reset } = useForm()
 
     const { data: likedItem = [], refetch } = useQuery({
         queryKey: ['likedItem'],
         queryFn: async () => {
             const res = await fetch(`https://communal-forum-server.vercel.app/posts/${id}`)
             const data = await res.json()
-            setCount(data.likes)
+            setCount(data.likes || 0)
             return data
         }
     })
 
-    const handleLikeCount = id => {
-        setCount(count++)
+    const handleLikeCount = () => {
+        setCount(prev => prev + 1)
+
         const like = { count }
         fetch(`https://communal-forum-server.vercel.app/posts/${id}`, {
             method: 'PUT',
@@ -36,10 +37,11 @@ const PostDetails = () => {
         })
             .then(res => res.json())
             .then(result1 => {
-                console.log(result1)
-                if (result1.modifiedCount > 0) {
-                    refetch()
-                }
+                fetch(`https://communal-forum-server.vercel.app/posts/${id}`)
+                    .then(res => res.json())
+                    .then(commonData => {
+                        setCount(commonData?.likes)
+                    })
             })
     }
 
@@ -58,27 +60,27 @@ const PostDetails = () => {
         })
             .then(res => res.json())
             .then(result => {
-                if (result.insertedId) {
-                    toast.success('comment successfully')
-                    reset()
-                }
+                toast.success('comment successfully')
             })
-
     }
 
-    fetch(`https://communal-forum-server.vercel.app/comments/${id}`)
-    .then(res => res.json())
-    .then(data => {
-        setComments(data)
-        refetch()
+    const {data: allComment = [] } = useQuery({
+        queryKey: ['allComment'],
+        queryFn: async () => {
+            const res = await fetch(`https://communal-forum-server.vercel.app/comments/${id}`)
+            const data = await res.json()
+            setComments(data)
+            refetch()
+            return data
+        }
     })
 
     return (
         <div className='mx-14 my-10'>
-            <h1 className='text-2xl font-semibold mb-8'>{likedItem.text}</h1>
-            <img src={likedItem.image} className="w-full h-96" alt="" />
+            <h1 className='text-2xl font-semibold mb-8'>{likedItem?.text}</h1>
+            <img src={likedItem?.image} className="w-full h-96" alt="" />
             <div className='flex justify-center my-10'>
-                <button onClick={() => handleLikeCount(id)} className='text-6xl text-blue-500 hover:scale-150 duration-300'>{< AiOutlineLike />}</button>
+                <button onClick={handleLikeCount} className='text-6xl text-blue-500 hover:scale-150 duration-300'>{< AiOutlineLike />}</button>
                 <span className='mt-8 ml-6'>{count} people like this post</span>
             </div>
             <form onSubmit={handleSubmit(handleComment)} className="form-control">
@@ -94,10 +96,10 @@ const PostDetails = () => {
                 <h1 className='text-4xl font-semibold text-center text-green-600 mt-10'><b>See Comments</b></h1>
                 <div className='grid gap-10 my-10'>
                     {
-                        comments.length ? 
-                        comments.map(comment => <Comments key={comment._id} comment={comment}></Comments>)
-                        :
-                        <h1 className='text-4xl text-pink-600 text-center font-semibold'>No comments yet</h1>
+                        comments ?
+                            comments?.map(comment => <Comments key={comment._id} comment={comment}></Comments>)
+                            :
+                            <h1 className='text-4xl text-pink-600 text-center font-semibold'>No comments yet</h1>
                     }
                 </div>
             </div>
